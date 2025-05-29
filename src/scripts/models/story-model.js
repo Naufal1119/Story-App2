@@ -115,4 +115,72 @@ export default class StoryModel {
       throw error;
     }
   }
+
+  async subscribeNotification(subscription) {
+    try {
+      const user = this._authModel.getUser();
+
+      if (!user || !user.token) {
+        throw new Error('User not authenticated');
+      }
+
+      const response = await fetch(`${this._baseUrl}/notifications/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint,
+          keys: subscription.toJSON().keys,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to subscribe to notifications');
+      }
+
+      const data = await response.json();
+      console.log('Subscription sent successfully:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Error in subscribeNotification:', error);
+      throw error;
+    }
+  }
+
+  async unsubscribeNotification(subscription) {
+    try {
+      const user = this._authModel.getUser();
+
+      if (!user || !user.token) {
+        throw new Error('User not authenticated');
+      }
+
+      const response = await fetch(`${this._baseUrl}/notifications/subscribe`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to unsubscribe from notifications');
+      }
+
+      console.log('Unsubscription sent successfully.');
+      return true;
+
+    } catch (error) {
+      console.error('Error in unsubscribeNotification:', error);
+      throw error;
+    }
+  }
 } 

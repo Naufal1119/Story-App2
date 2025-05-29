@@ -49,7 +49,6 @@ export default class RegisterPage {
       try {
         await this._presenter.register(userData);
       } catch (error) {
-        // Error handling is done in the presenter
       }
     });
   }

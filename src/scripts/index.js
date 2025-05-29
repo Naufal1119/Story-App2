@@ -9,6 +9,7 @@ import '../styles/pages/detail-story.css';
 import routes from './routes/routes';
 import { parseActiveUrlWithCombiner } from './routes/url-parser';
 import AuthModel from './models/auth-model';
+import { subscribeUser } from './utils/notification-helper';
 
 // Definition of the App class (moved from views/pages/app.js)
 class App {
@@ -42,6 +43,20 @@ class App {
 
       document.addEventListener('click', () => {
         this._navigationDrawer.classList.remove('open');
+      });
+    }
+
+    // Add event listener for the Subscribe button
+    const subscribeButton = this._navigationDrawer.querySelector('.subscribe-button');
+    if (subscribeButton) {
+      subscribeButton.addEventListener('click', async () => {
+        try {
+          await subscribeUser();
+          alert('Subscribed to push notifications!');
+        } catch (error) {
+          console.error('Subscription failed:', error);
+          alert('Failed to subscribe to push notifications.');
+        }
       });
     }
   }
@@ -126,4 +141,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
   });
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      }).catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+    });
+  }
 });
