@@ -18,7 +18,13 @@ class App {
     this._navigationDrawer = navigationDrawer;
     this._authModel = new AuthModel();
 
+    // Get references to navigation list items
+    this._addStoryNavItem = this._navigationDrawer.querySelector('.add-story-button').parentElement;
+    this._subscribeNavItem = this._navigationDrawer.querySelector('.subscribe-button').parentElement;
+    this._logoutNavItem = this._navigationDrawer.querySelector('.logout-button').parentElement;
+
     this._initialAppShell();
+    this._updateNavigationVisibility(); // Initial visibility check
   }
 
   _initialAppShell() {
@@ -43,6 +49,9 @@ class App {
   async renderPage() {
     const url = parseActiveUrlWithCombiner();
     const page = routes[url] || routes['/404'];
+    
+    // Update navigation visibility before rendering the page
+    this._updateNavigationVisibility(url);
     
     // Cek autentikasi untuk halaman yang membutuhkan login
     if (url !== '/login' && url !== '/register' && !this._authModel.isLoggedIn()) {
@@ -81,6 +90,27 @@ class App {
         this._content.innerHTML = '<h2>Error loading page</h2>';
       }
     }
+
+    // Update navigation visibility after rendering the page (just in case afterRender changes something relevant)
+    this._updateNavigationVisibility(url);
+  }
+
+  _updateNavigationVisibility(url = parseActiveUrlWithCombiner()) {
+    const isLoggedIn = this._authModel.isLoggedIn();
+    const isAuthPage = url === '/login' || url === '/register';
+
+    if (this._addStoryNavItem) {
+      this._addStoryNavItem.style.display = (isLoggedIn && !isAuthPage) ? 'list-item' : 'none';
+    }
+    if (this._subscribeNavItem) {
+      this._subscribeNavItem.style.display = (isLoggedIn && !isAuthPage) ? 'list-item' : 'none';
+    }
+    if (this._logoutNavItem) {
+      this._logoutNavItem.style.display = isLoggedIn ? 'list-item' : 'none';
+    }
+
+     // The Home link should always be visible, regardless of login status
+     // We don't need to explicitly control its visibility here unless there's a specific requirement
   }
 }
 

@@ -18,6 +18,9 @@ export default class LoginPage {
               <input type="password" class="form-input" id="password" required>
             </div>
             <button type="submit" class="login-button">Login</button>
+            <div id="loadingIndicator" class="loading-indicator">
+              <div class="spinner"></div>
+            </div>
           </form>
           <p class="register-link">
             Don't have an account? <a href="#/register">Register here</a>
@@ -29,11 +32,18 @@ export default class LoginPage {
 
   async afterRender() {
     this._form = document.getElementById('loginForm');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const loginButton = this._form.querySelector('.login-button');
+
     this._form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      
+
+      // Show loading indicator and disable button
+      if (loadingIndicator) loadingIndicator.style.display = 'flex';
+      if (loginButton) loginButton.disabled = true;
+
       try {
         const response = await this._presenter.login(email, password);
         if (response) {
@@ -41,6 +51,10 @@ export default class LoginPage {
         }
       } catch (error) {
         alert(error.message);
+      } finally {
+        // Hide loading indicator and re-enable button
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        if (loginButton) loginButton.disabled = false;
       }
     });
   }
