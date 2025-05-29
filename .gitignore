@@ -1,0 +1,11 @@
+# Directories
+.idea
+.vscode
+node_modules
+dist
+
+# Files
+.env
+Aturan.txt
+API.txt
+stucture.txt

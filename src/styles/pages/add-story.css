@@ -1,0 +1,314 @@
+.add-story-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.add-story-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 8px rgba(45, 50, 80, 0.1);
+}
+
+.add-story-title {
+  text-align: center;
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.add-story-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-label {
+  color: #2D3250;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.form-input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #94A6BC;
+  box-shadow: 0 0 0 2px rgba(148, 166, 188, 0.4);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.photo-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.camera-preview {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.photo-preview {
+  width: 100%;
+  min-height: 200px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photo-preview img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.photo-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.camera-button {
+  background-color: #94A6BC;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+.camera-button:hover {
+  background-color: #7b8d9f;
+}
+
+.file-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.map {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.location-button {
+  background-color: #94A6BC;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.location-button:hover {
+  background-color: #7b8d9f;
+}
+
+.submit-button {
+  background-color: #2D3250;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #1a1d2b;
+}
+
+.capture-button,
+.retake-button,
+.close-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  transition: all 0.3s;
+  min-width: 120px;
+}
+
+.capture-button {
+  background-color: #94A6BC;
+  color: white;
+}
+
+.capture-button:hover {
+  background-color: #7b8d9f;
+  transform: translateY(-2px);
+}
+
+.retake-button {
+  background-color: #B4D4FF;
+  color: white;
+}
+
+.retake-button:hover {
+  background-color: #9cb9e6;
+  transform: translateY(-2px);
+}
+
+.close-button {
+  background-color: #F44336;
+  color: white;
+}
+
+.close-button:hover {
+  background-color: #e0a800;
+}
+
+.hidden {
+  display: none;
+}
+
+.back-to-home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: #333; /* Or your preferred color */
+  margin-bottom: 20px; /* Space between button and title */
+  font-size: 16px;
+}
+
+.back-to-home-button:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 600px) {
+  .add-story-container {
+    padding: 0 15px;
+  }
+
+  .add-story-card {
+    padding: 20px;
+  }
+
+  .add-story-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    gap: 8px;
+  }
+
+  .form-label {
+    font-size: 15px;
+  }
+
+  .form-input,
+  .file-input,
+  .camera-button,
+  .location-button,
+  .submit-button {
+    font-size: 15px;
+    padding: 10px 15px;
+  }
+
+  .camera-preview {
+    height: 300px;
+  }
+
+  .photo-preview {
+    min-height: 150px;
+  }
+
+  .photo-controls {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .file-input,
+  .camera-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .map {
+    height: 250px;
+  }
+
+  .capture-button,
+  .retake-button,
+  .close-button {
+    min-width: auto;
+    padding: 10px 15px;
+    font-size: 15px;
+  }
+
+  .camera-buttons {
+    justify-content: space-around;
+  }
+} 

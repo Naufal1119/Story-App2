@@ -1,0 +1,115 @@
+.login-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.login-button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #357abd;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.register-link a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 400px) {
+  .login-container,
+  .register-container { /* Apply to both login and register */
+    padding: 10px; /* Reduce padding on very small screens */
+  }
+
+  .login-card,
+  .register-card { /* Apply to both login and register */
+    padding: 15px; /* Adjust card padding */
+  }
+
+  .login-title,
+  .register-title { /* Apply to both login and register */
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .form-input,
+  .login-button,
+  .register-button { /* Apply to all relevant buttons/inputs */
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .form-group {
+     gap: 4px;
+  }
+
+  .form-label {
+     font-size: 14px;
+  }
+
+   .register-link,
+   .login-link {
+      margin-top: 15px;
+      font-size: 14px;
+   }
+} 
