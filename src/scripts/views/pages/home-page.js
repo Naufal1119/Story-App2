@@ -10,14 +10,14 @@ export default class HomePage {
     return `
       <a href="#mainContent" class="skip-link">Skip to content</a>
       <div class="home-container">
-        <main id="mainContent">
+        <section id="mainContent">
           <div id="storiesMap" class="stories-map"></div>
           <div id="storiesContainer" class="stories-grid">
             <div class="loading-spinner">
               <div class="spinner"></div>
             </div>
           </div>
-        </main>
+        </section>
       </div>
     `;
   }
