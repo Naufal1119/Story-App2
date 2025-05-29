@@ -9,7 +9,7 @@ import '../styles/pages/detail-story.css';
 import routes from './routes/routes';
 import { parseActiveUrlWithCombiner } from './routes/url-parser';
 import AuthModel from './models/auth-model';
-import { subscribeUser } from './utils/notification-helper';
+import { subscribeUser, unsubscribeUser } from './utils/notification-helper';
 
 // Definition of the App class (moved from views/pages/app.js)
 class App {
@@ -23,8 +23,10 @@ class App {
     this._addStoryNavItem = this._navigationDrawer.querySelector('.add-story-button').parentElement;
     this._subscribeNavItem = this._navigationDrawer.querySelector('.subscribe-button').parentElement;
     this._logoutNavItem = this._navigationDrawer.querySelector('.logout-button').parentElement;
+    this._subscribeButton = this._navigationDrawer.querySelector('.subscribe-button');
 
     this._initialAppShell();
+    this._checkSubscriptionStatusAndUpdateButton();
     this._updateNavigationVisibility(); // Initial visibility check
   }
 
@@ -46,16 +48,26 @@ class App {
       });
     }
 
-    // Add event listener for the Subscribe button
-    const subscribeButton = this._navigationDrawer.querySelector('.subscribe-button');
-    if (subscribeButton) {
-      subscribeButton.addEventListener('click', async () => {
+    if (this._subscribeButton) {
+      this._subscribeButton.addEventListener('click', async () => {
+        const isLoggedIn = this._authModel.isLoggedIn();
+        if (!isLoggedIn) {
+          alert('Please login to subscribe.');
+          return;
+        }
+
         try {
-          await subscribeUser();
-          alert('Subscribed to push notifications!');
+          if (this._subscribeButton.textContent === 'Subscribe') {
+            await subscribeUser();
+            alert('Subscribed to push notifications!');
+          } else {
+            await unsubscribeUser();
+            alert('Unsubscribed from push notifications.');
+          }
+          await this._checkSubscriptionStatusAndUpdateButton();
         } catch (error) {
-          console.error('Subscription failed:', error);
-          alert('Failed to subscribe to push notifications.');
+          console.error('Subscription/Unsubscription failed:', error);
+          alert(`Action failed: ${error.message}`);
         }
       });
     }
@@ -119,6 +131,9 @@ class App {
     }
     if (this._subscribeNavItem) {
       this._subscribeNavItem.style.display = (isLoggedIn && !isAuthPage) ? 'list-item' : 'none';
+      if (isLoggedIn && !isAuthPage) {
+        this._checkSubscriptionStatusAndUpdateButton();
+      }
     }
     if (this._logoutNavItem) {
       this._logoutNavItem.style.display = isLoggedIn ? 'list-item' : 'none';
@@ -126,6 +141,32 @@ class App {
 
      // The Home link should always be visible, regardless of login status
      // We don't need to explicitly control its visibility here unless there's a specific requirement
+  }
+
+  async _checkSubscriptionStatusAndUpdateButton() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !this._subscribeButton) {
+      return; // Exit if not supported or button not found
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+
+      if (subscription) {
+        // User is subscribed
+        this._subscribeButton.textContent = 'Unsubscribe';
+        this._subscribeButton.classList.add('unsubscribe-button'); // Add class for styling
+        this._subscribeButton.classList.remove('subscribe-button'); // Remove class
+      } else {
+        // User is not subscribed
+        this._subscribeButton.textContent = 'Subscribe';
+        this._subscribeButton.classList.add('subscribe-button'); // Add class for styling
+        this._subscribeButton.classList.remove('unsubscribe-button'); // Remove class
+      }
+    } catch (error) {
+      console.error('Failed to check subscription status:', error);
+      // Optionally disable button or show error state
+    }
   }
 }
 
