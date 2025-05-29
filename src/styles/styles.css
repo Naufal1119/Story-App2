@@ -140,6 +140,16 @@ header {
   background-color: #27ae60; /* Darker green on hover */
 }
 
+/* Styles for View Transition API */
+::view-transition-group(*) {
+  animation-duration: 1s;
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 1s;
+}
+
 /* MAIN */
 .main-content {
   padding-block: 20px;
