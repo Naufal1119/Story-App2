@@ -52,6 +52,10 @@ class DetailStoryPresenter {
         this._view.displayLocationPopup(marker, story.lat, story.lon, this._map);
     }
   }
+
+  navigateToHome() {
+    window.location.hash = '#/';
+  }
 }
 
 export default DetailStoryPresenter; 

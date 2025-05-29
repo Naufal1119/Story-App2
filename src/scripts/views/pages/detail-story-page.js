@@ -13,6 +13,9 @@ export default class DetailStoryPage {
     return `
       <a href="#mainContent" class="skip-link">Skip to content</a>
       <div class="detail-container">
+        <div class="back-to-home">
+          <button id="backToHomeButton" class="back-button">Back to Home</button>
+        </div>
         <article class="detail-card">
           <div id="storyContent" role="main" id="mainContent">
             <div class="loading-spinner">
@@ -57,6 +60,15 @@ export default class DetailStoryPage {
         const url = window.location.hash.split('/');
         const storyId = url[url.length - 1];
         this._presenter.initializeDetail(storyId, 'detailMap'); // Pass storyId and map container ID
+    }
+
+    const backToHomeButton = document.getElementById('backToHomeButton');
+    if (backToHomeButton) {
+        backToHomeButton.addEventListener('click', () => {
+            if (this._presenter && typeof this._presenter.navigateToHome === 'function') {
+                this._presenter.navigateToHome();
+            }
+        });
     }
 
     // Remove story fetching and map initialization logic from here
