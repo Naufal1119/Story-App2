@@ -1,0 +1,64 @@
+[debug] [2025-05-29T22:39:19.246Z] ----------------------------------------------------------------------
+[debug] [2025-05-29T22:39:19.248Z] Command:       C:\nvm4w\nodejs\node.exe C:\Users\MSI THIN 15\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2025-05-29T22:39:19.248Z] CLI Version:   14.5.0
+[debug] [2025-05-29T22:39:19.249Z] Platform:      win32
+[debug] [2025-05-29T22:39:19.249Z] Node Version:  v22.15.0
+[debug] [2025-05-29T22:39:19.249Z] Time:          Fri May 30 2025 06:39:19 GMT+0800 (Singapore Standard Time)
+[debug] [2025-05-29T22:39:19.249Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-29T22:39:19.259Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-29T22:39:19.260Z] > authorizing via signed-in user (fc769d5y2277@student.devacademy.id)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\MSI THIN 15\Documents\Dev\Dicoding\Belajar Pengembangan Web Intermediate\Proyek-Pertama-Web-Intermediete-Dicoding2-lengkap
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-05-29T22:39:37.544Z] Checked if tokens are valid: false, expires at: 1748461136783
+[debug] [2025-05-29T22:39:37.545Z] Checked if tokens are valid: false, expires at: 1748461136783
+[debug] [2025-05-29T22:39:37.545Z] > refreshing access token with scopes: []
+[debug] [2025-05-29T22:39:37.546Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-05-29T22:39:37.546Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-05-29T22:39:37.820Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-05-29T22:39:37.821Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-05-29T22:39:37.850Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-05-29T22:39:39.030Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-05-29T22:39:39.031Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project citycareapp-87c67 (CityCareApp) 
+[info] 
+=== Hosting Setup
+[debug] [2025-05-29T22:40:00.805Z] Checked if tokens are valid: true, expires at: 1748561976822
+[debug] [2025-05-29T22:40:00.805Z] Checked if tokens are valid: true, expires at: 1748561976822
+[debug] [2025-05-29T22:40:00.805Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/citycareapp-87c67 [none]
+[debug] [2025-05-29T22:40:01.243Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/citycareapp-87c67 200
+[debug] [2025-05-29T22:40:01.245Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/citycareapp-87c67 {"projectId":"citycareapp-87c67","projectNumber":"841039429052","displayName":"CityCareApp","name":"projects/citycareapp-87c67","resources":{"hostingSite":"citycareapp-87c67"},"state":"ACTIVE","etag":"1_dcf6a801-a0cc-4c9b-bb46-5b2f2dd2efa4"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2025-05-29T22:43:51.038Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\MSI THIN 15\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:518:28)
+    at Interface.emit (node:domain:489:12)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1128:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:267:20)
+    at ReadStream.emit (node:events:530:35)
+    at ReadStream.emit (node:domain:489:12)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+[error] 
+[error] Error: An unexpected error has occurred.

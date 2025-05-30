@@ -95,49 +95,59 @@ header {
   padding: 8px 15px;
   display: inline-block;
   vertical-align: middle;
-}
-
-.add-story-button {
-  background-color: #4a90e2;
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-
-.add-story-button:hover {
-  background-color: #357ABD;
-}
-
-.logout-button {
-  background-color: #e74c3c;
+  /* Add common button styles */
   border: none;
-  color: white;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  text-decoration: none; /* Ensure no underline by default for button-like elements */
+  transition: background-color 0.3s ease, opacity 0.3s ease; /* Add transition for smoother hover */
 }
 
-.logout-button:hover {
-  background-color: #c0392b;
-}
-
+/* Specific styles for Subscribe button */
 .subscribe-button {
   background-color: #2ecc71; /* Green color */
-  border: none;
   color: white;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
 .subscribe-button:hover {
   background-color: #27ae60; /* Darker green on hover */
+}
+
+/* Specific styles for Add Story button (already blue) */
+.add-story-button {
+  background-color: #4a90e2; /* Blue color */
+  color: white;
+}
+
+.add-story-button:hover {
+  background-color: #357ABD; /* Darker blue on hover */
+}
+
+/* Specific styles for Unsubscribe button (e.g., gray or different color) */
+.unsubscribe-button {
+  background-color: #bdc3c7; /* Gray color */
+  color: #333; /* Dark text color */
+}
+
+.unsubscribe-button:hover {
+  background-color: #95a5a6; /* Darker gray on hover */
+}
+
+/* Specific styles for Logout button (already red) */
+.logout-button {
+  background-color: #e74c3c; /* Red color */
+  color: white;
+}
+
+.logout-button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Ensure links that act as buttons don't have default link color */
+.nav-list li a.add-story-button {
+  color: white; /* Ensure text is white for the blue button */
 }
 
 /* Styles for View Transition API */

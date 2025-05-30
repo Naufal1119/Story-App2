@@ -16,8 +16,17 @@ module.exports = merge(common, {
     ],
   },
   devServer: {
-    static: path.resolve(__dirname, 'dist'),
-    port: 9010,
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
+      serveIndex: true,
+      watch: true,
+      staticOptions: {
+        mimeTypes: { 'json': 'application/manifest+json' },
+        extensions: ['json'],
+      },
+    },
+    port: 9013,
     client: {
       overlay: {
         errors: true,
