@@ -26,7 +26,7 @@ module.exports = merge(common, {
         extensions: ['json'],
       },
     },
-    port: 9013,
+    port: 9010,
     client: {
       overlay: {
         errors: true,

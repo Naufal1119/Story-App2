@@ -43,7 +43,7 @@ export default class LoginPage {
       // Show loading indicator and disable button
       if (loadingIndicator) loadingIndicator.style.display = 'flex';
       if (loginButton) loginButton.disabled = true;
-
+      
       try {
         const response = await this._presenter.login(email, password);
         if (response) {

@@ -66,11 +66,11 @@ export default class HomePage {
         logoutButton.addEventListener('click', async () => {
           const confirmLogout = confirm('Are you sure you want to logout?');
           if (confirmLogout) {
-            try {
-              await this._presenter.logout();
-            } catch (error) {
-              console.error('Error logging out:', error);
-              alert('Failed to logout');
+          try {
+            await this._presenter.logout();
+          } catch (error) {
+            console.error('Error logging out:', error);
+            alert('Failed to logout');
             }
           }
         });

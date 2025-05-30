@@ -1,12 +1,115 @@
+// Remove or comment out old manual caching logic
+// const CACHE_NAME = 'story-app-cache-v1';
+// const urlsToCache = [ ... ];
+// self.addEventListener('install', (event) => { ... });
+// self.addEventListener('activate', (event) => { ... });
+// self.addEventListener('fetch', (event) => { ... });
+
+// Import Workbox modules
+import { cleanupOutdatedCaches, precacheAndRoute, matchPrecache } from 'workbox-precaching';
+import { registerRoute, setCatchHandler } from 'workbox-routing';
+import { StaleWhileRevalidate, CacheFirst, NetworkFirst } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { ExpirationPlugin } from 'workbox-expiration';
+
+// Clean up old caches
+cleanupOutdatedCaches();
+
+// Precache all assets listed in the manifest (injected by WorkboxWebpackPlugin)
+precacheAndRoute(self.__WB_MANIFEST || []);
+
+// --- Runtime Caching Strategies ---
+
+// Cache First strategy for Google Fonts stylesheets
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.googleapis.com',
+  new StaleWhileRevalidate({
+    cacheName: 'google-fonts-stylesheets',
+  })
+);
+
+// Cache First strategy for Google Fonts webfonts
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.gstatic.com',
+  new CacheFirst({
+    cacheName: 'google-fonts-webfonts',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxAgeSeconds: 60 * 60 * 24 * 365, maxEntries: 30 }), // 1 Year
+    ],
+  })
+);
+
+// Cache First strategy for external CDN assets (unpkg, cdnjs)
+registerRoute(
+  ({url}) => url.origin === 'https://unpkg.com' || url.origin === 'https://cdnjs.cloudflare.com',
+  new CacheFirst({
+    cacheName: 'external-cdn-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxAgeSeconds: 60 * 60 * 24 * 30 }), // 30 Days
+    ],
+  })
+);
+
+// Stale While Revalidate strategy for images (including map tiles)
+registerRoute(
+  ({ request, url }) => request.destination === 'image' ||
+                       url.hostname.includes('tile.openstreetmap.org') ||
+                       url.hostname.includes('api.maptiler.com'), // Include map tile providers
+  new StaleWhileRevalidate({
+    cacheName: 'image-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }), // 30 Days
+    ],
+  })
+);
+
+// Network First strategy for Story API GET requests
+registerRoute(
+    ({ url, request }) => url.hostname === 'story-api.dicoding.dev' && request.method === 'GET',
+    new NetworkFirst({
+        cacheName: 'story-api-cache',
+        plugins: [
+            new CacheableResponsePlugin({ statuses: [0, 200] }),
+            new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 24 * 60 * 60 }), // 24 Hours
+        ],
+         networkTimeoutSeconds: 10, // Fallback to cache after 10 seconds
+    })
+);
+
+// --- Offline Fallback --- (using setCatchHandler for navigations)
+setCatchHandler(async ({ event }) => {
+  // The catch handler is triggered when a route handler throws an error
+  // or returns a Response.error().
+  
+  // Check if the request is a navigation.
+  if (event.request.mode === 'navigate') {
+    console.warn(`[Service Worker] Navigasi gagal untuk ${event.request.url}. Mencoba sajikan halaman offline.`);
+    const offlinePage = await matchPrecache('/offline.html'); // Try to match offline.html in precache
+    return offlinePage || Response.error(); // Serve offline page or return network error
+  }
+
+  // Fallback for other types of requests (optional, might just let them fail)
+  console.warn(`[Service Worker] Catch handler triggered for non-navigation request: ${event.request.url}.`);
+  return Response.error(); // Default to network error for non-navigations
+});
+
+// --- Existing Push Notification Handlers ---
+
+// Your existing push handler
 self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push received.');
   const data = event.data ? event.data.json() : {}; // Handle cases where data might be null or not JSON
 
   const title = data.title || 'Push Notification';
   const options = {
-    body: data.options ? data.options.body : 'No message provided.', // Safely access body
-    icon: './favicon.png', // You can set a default icon
-    // Add other options as needed, e.g., image, badge, vibrate, actions
+    body: data.options ? data.options.body : (data.body || 'No message provided.'), // Safely access body
+    icon: data.options ? data.options.icon : (data.icon || './favicon.png'), // Safely access icon, fallback to default
+    badge: data.options ? data.options.badge : (data.badge || null), // Safely access badge
+    data: data.options ? data.options.data : (data.data || null), // Safely access data payload
+    // Add other options as needed, e.g., image, vibrate, actions
   };
 
   // Ensure notification options are valid before showing
@@ -21,102 +124,33 @@ self.addEventListener('push', (event) => {
   }
 });
 
+// Your existing notificationclick handler
 self.addEventListener('notificationclick', (event) => {
-  console.log('Notification clicked: ', event.notification.tag);
+  console.log('Service Worker: Notification click Received.');
   event.notification.close();
 
-  // Example: Open a window when notification is clicked
-  // event.waitUntil(
-  //   clients.openWindow('https://developers.google.com/web/')
-  // );
-});
+  const urlToOpen = event.notification.data && event.notification.data.url ? event.notification.data.url : '/index.html#/'; // Default to home if no URL in data
 
-const CACHE_NAME = 'story-app-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.bundle.js',
-  '/app.css',
-  '/favicon.png',
-  '/manifest.json',
-  // Add other critical static assets here, like images used in application shell
-  // e.g., '/images/logo.png',
-  // Make sure these files are included in your Webpack build output (dist folder)
-];
-
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Installing Service Worker ...', event);
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[Service Worker] Caching app shell');
-        return cache.addAll(urlsToCache);
-      })
-      .catch((error) => {
-        console.error('[Service Worker] Failed to cache app shell:', error);
-      })
-  );
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activating Service Worker ...', event);
-  // Clean up old caches
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[Service Worker] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        // Check if client URL matches base URL (pathname) to focus it
+        if (new URL(client.url).pathname === new URL(urlToOpen, self.location.origin).pathname) {
+             // Optional: Navigate to the specific hash if already on the base page
+            if (client.url !== new URL(urlToOpen, self.location.origin).href && 'navigate' in client) {
+                client.navigate(urlToOpen);
+            }
+          if ('focus' in client) {
+            return client.focus();
           }
-          return null;
-        })
-      );
-    }).then(() => clients.claim())
-  );
-});
-
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Cache hit - return response
-      if (response) {
-        console.log('[Service Worker] Serving from cache:', event.request.url);
-        return response;
+        }
       }
-
-      // No cache hit - fetch from network
-      console.log('[Service Worker] Fetching from network:', event.request.url);
-      return fetch(event.request)
-        .then((response) => {
-          // Check if we received a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response; // Don't cache non-200 or non-basic responses
-          }
-
-          // IMPORTANT: Clone the response. A response is a stream
-          // and can only be consumed once. We must clone the response
-          // so that we can put the original into the cache and also serve
-          // the second to the browser.
-          const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response; // Return the original response to the browser
-        })
-        .catch(() => {
-          // Network request failed, try to serve an offline fallback
-          // For application shell, cache-first strategy already handles this.
-          // For API requests or other resources, you might want to serve a specific offline page.
-          console.warn('[Service Worker] Fetch failed. Network is down or resource not in cache.', event.request.url);
-          // You could serve a specific offline page here if needed
-          // return caches.match('/offline.html');
-          // Or simply let it fail if it's a non-critical resource/API call
-          throw new Error('Network request failed and no cache match.');
-        });
-    })
+      // If no existing client is found or focused, open a new window
+      if (clients.openWindow) return clients.openWindow(urlToOpen);
+    }).catch(err => console.error('Error handling notification click:', err))
   );
-}); 
+});
+
+// Optional: Add explicit install and activate listeners for immediate control
+self.addEventListener('install', () => { self.skipWaiting(); });
+self.addEventListener('activate', (event) => { event.waitUntil(self.clients.claim()); }); 
