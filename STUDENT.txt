@@ -1,2 +1,4 @@
-APP_URL=<url_aplikasi>
+APP_URL=<
+NETLIFY : https://683abb46505e129a869afcb2--eloquent-medovik-17720d.netlify.app
+>
 MAP_SERVICE_API_KEY=<X5FvjDiGuHxAtiw6WFj7>
