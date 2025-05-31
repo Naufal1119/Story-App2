@@ -1,7 +1,7 @@
 import StoryModel from '../models/story-model';
 import { setUser } from '../utils/auth';
 import Auth from '../utils/auth';
-import { addFavoriteStoryToDb, removeFavoriteStoryFromDb, isStoryFavoriteInDb } from '../utils/indexed-db-helper';
+import { addFavoriteStoryToDb, removeFavoriteStoryFromDb, isStoryFavoriteInDb, addStoriesToDb } from '../utils/indexed-db-helper';
 
 class HomePresenter {
   constructor(view) {
@@ -13,6 +13,9 @@ class HomePresenter {
     try {
       const stories = await this._storyModel.getStories();
       
+      // Add stories to IndexedDB
+      await addStoriesToDb(stories);
+
       // Check favorite status for each story
       const storiesWithFavoriteStatus = await Promise.all(stories.map(async (story) => {
         const isFavorite = await isStoryFavoriteInDb(story.id);

@@ -22,6 +22,7 @@ const openStoryDb = async () => {
 };
 
 const addStoriesToDb = async (stories) => {
+  console.log('Attempting to add stories to DB', stories);
   if (!Array.isArray(stories)) {
       console.error("addStoriesToDb requires an array.");
       return;
@@ -30,7 +31,10 @@ const addStoriesToDb = async (stories) => {
   const tx = db.transaction(STORY_STORE_NAME, 'readwrite');
   const store = tx.objectStore(STORY_STORE_NAME);
   try {
-      await Promise.all(stories.map(story => store.put(story)));
+      await Promise.all(stories.map(story => {
+          console.log('Putting story into store:', story);
+          return store.put(story);
+      }));
       await tx.done;
       console.log(`${stories.length} stories added/updated in "${STORY_STORE_NAME}" IndexedDB.`);
   } catch (error) {
