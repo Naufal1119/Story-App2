@@ -1,11 +1,3 @@
-// Remove or comment out old manual caching logic
-// const CACHE_NAME = 'story-app-cache-v1';
-// const urlsToCache = [ ... ];
-// self.addEventListener('install', (event) => { ... });
-// self.addEventListener('activate', (event) => { ... });
-// self.addEventListener('fetch', (event) => { ... });
-
-// Import Workbox modules
 import { cleanupOutdatedCaches, precacheAndRoute, matchPrecache } from 'workbox-precaching';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
 import { StaleWhileRevalidate, CacheFirst, NetworkFirst } from 'workbox-strategies';
@@ -110,21 +102,37 @@ setCatchHandler(async ({ event }) => {
 // Your existing push handler
 self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push received.');
-  const data = event.data ? event.data.json() : {}; // Handle cases where data might be null or not JSON
+  
+  let data = {}; // Default empty object
+  if (event.data) {
+    try {
+      // Attempt to parse the data as JSON
+      data = event.data.json();
+    } catch (error) {
+      console.error('[Service Worker] Failed to parse push data as JSON:', error);
+      // Fallback for plain text or invalid JSON - use the raw text as body
+      data.body = event.data.text();
+      data.title = 'New Message'; // Default title for non-JSON data
+    }
+  }
 
-  const title = data.title || 'Push Notification';
+  // Extract title and body from the parsed data or use defaults
+  const notificationTitle = data.title || 'Push Notification';
+  // Prioritize data.options.body, then data.body, then a default message
+  const notificationBody = (data.options && data.options.body) ? data.options.body : (data.body || 'No message provided.');
+
   const options = {
-    body: data.options ? data.options.body : (data.body || 'No message provided.'), // Safely access body
-    icon: data.options ? data.options.icon : (data.icon || './favicon.png'), // Safely access icon, fallback to default
-    badge: data.options ? data.options.badge : (data.badge || null), // Safely access badge
-    data: data.options ? data.options.data : (data.data || null), // Safely access data payload
+    body: notificationBody,
+    icon: (data.options && data.options.icon) ? data.options.icon : (data.icon || './favicon.png'), // Use icon from data or default
+    badge: (data.options && data.options.badge) ? data.options.badge : (data.badge || null), // Use badge from data or default
+    data: (data.options && data.options.data) ? data.options.data : (data.data || null), // Use click action data
     // Add other options as needed, e.g., image, vibrate, actions
   };
 
-  // Ensure notification options are valid before showing
+  // Ensure notification has a body before showing (optional but good practice)
   if (options.body) {
     event.waitUntil(
-      self.registration.showNotification(title, options).catch((error) => {
+      self.registration.showNotification(notificationTitle, options).catch((error) => {
         console.error('[Service Worker] Error showing notification:', error);
       })
     );
