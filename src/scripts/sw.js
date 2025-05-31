@@ -102,9 +102,6 @@ setCatchHandler(async ({ event }) => {
 
   // Fallback for other types of requests (optional, might just let them fail)
   console.warn(`[Service Worker] Catch handler triggered for other request: ${event.request.url}.`);
-  // For other failed requests, we might still want to return an error or a generic offline asset
-  // Depending on the asset type, you might serve a placeholder image, etc.
-  // For now, we'll just return an error.
   return Response.error();
 });
 
