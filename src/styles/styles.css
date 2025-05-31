@@ -147,6 +147,16 @@ header {
   background-color: #c0392b; /* Darker red on hover */
 }
 
+/* Specific styles for Favorites button */
+.favorites-button {
+  background-color: #aeb6bf; /* Slightly darker gray color */
+  color: #333; /* Dark text color */
+}
+
+.favorites-button:hover {
+  background-color: #808b96; /* Even darker gray on hover */
+}
+
 /* Ensure links that act as buttons don't have default link color */
 .nav-list li a.add-story-button {
   color: white; /* Ensure text is white for the blue button */
@@ -154,7 +164,10 @@ header {
 
 /* Styles for Save/Unsave button */
 .save-favorite-button {
-  margin-top: 10px; /* Add some space above the button */
+  /* margin-top is handled by flex container gap */
+  display: block;
+  width: 100%;
+  margin-bottom: 10px; /* Add space below each button */
   background-color: #5cb85c; /* Green color for Save */
   color: white;
   border: none;
@@ -179,19 +192,22 @@ header {
 
 /* Styles for Remove Favorite button on Favorites page */
 .remove-favorite-button {
-    margin-top: 10px;
-    background-color: #d9534f; /* Red color for Remove */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+  /* margin-top is handled by flex container gap */
+  display: block;
+  width: 100%;
+  margin-bottom: 10px; /* Add space below each button */
+  background-color: #d9534f; /* Red color for Remove */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
 .remove-favorite-button:hover {
-    background-color: #c9302c; /* Darker red on hover */
+  background-color: #c9302c; /* Darker red on hover */
 }
 
 /* Styles for View Transition API */
@@ -209,7 +225,113 @@ header {
   padding-block: 20px;
 }
 
-/* Write your styles more here */
+/* Styles for the stories grid container */
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+  gap: 20px; /* Space between grid items */
+  padding: 20px 0; /* Padding above and below the grid */
+}
+
+/* Styles for individual story cards */
+.story-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden; /* Ensure image corners are rounded and content stays within bounds */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.story-image {
+  width: 100%;
+  height: 200px; /* Fixed height for consistency */
+  object-fit: cover; /* Cover the area without distorting aspect ratio */
+}
+
+.story-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow content to take up available space */
+}
+
+.story-title {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #333;
+  /* Ensure title wraps if needed */
+  word-break: break-word;
+}
+
+.story-description {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+  /* Add styles for text wrapping and potential ellipsis if needed */
+  overflow-wrap: break-word;
+  word-wrap: break-word; /* Standard way */
+  display: -webkit-box; /* For multiline ellipsis */
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.story-meta {
+  font-size: 0.8em;
+  color: #888;
+  margin-bottom: 10px;
+  margin-top: auto; /* Push meta and buttons to the bottom */
+}
+
+.story-meta p {
+  margin-bottom: 5px;
+}
+
+.read-more-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px; /* Add space below each button */
+  background-color: #4a90e2;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-align: center; /* Center text inside the button */
+}
+
+.read-more-button:hover {
+   background-color: #357ABD;
+}
+
+/* Styles for the Back to Home button on the Favorites page */
+.back-to-home-container {
+    margin-top: 20px; /* Space above the button */
+    margin-bottom: 20px; /* Space below the button */
+}
+
+.back-button {
+    /* Inherits common button styles from nav-list li > button */
+    background-color: transparent;
+    color: #4a90e2; /* Blue color for consistency with links */
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0; /* Remove padding to look like a link */
+}
+
+.back-button:hover {
+    text-decoration: underline; /* Underline on hover like a link */
+    background-color: transparent; /* Keep background transparent */
+}
+
+.story-actions {
+  display: block; /* Change to block to stack children vertically */
+  gap: 10px; /* Adjust space between buttons as needed */
+  margin-top: 10px; /* Add some space above the buttons */
+}
 
 @media screen and (max-width: 768px) {
   .container {

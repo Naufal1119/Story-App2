@@ -49,6 +49,18 @@ class App {
       });
     }
 
+    // Add event listener for the Favorites button
+    const favoritesButton = this._navigationDrawer.querySelector('#favoritesButton');
+    if (favoritesButton) {
+      favoritesButton.addEventListener('click', () => {
+        window.location.hash = '#/favorites';
+        // Close the drawer after navigation
+        if (this._navigationDrawer) {
+          this._navigationDrawer.classList.remove('open');
+        }
+      });
+    }
+
     if (this._subscribeButton) {
       this._subscribeButton.addEventListener('click', async () => {
         const isLoggedIn = this._authModel.isLoggedIn();

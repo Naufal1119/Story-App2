@@ -8,7 +8,7 @@ class FavoritesPresenter {
   async initialize() {
     console.log('Initializing FavoritesPresenter...');
     await this._displayFavoriteStories();
-    this._setupEventListeners();
+    // Event listeners are now set up in the view (favorites-page.js)
   }
 
   async _displayFavoriteStories() {
@@ -21,15 +21,7 @@ class FavoritesPresenter {
     }
   }
 
-  _setupEventListeners() {
-    // Use event delegation on the story list container
-    const storiesListElement = document.getElementById('favoriteStoriesList');
-    if (storiesListElement) {
-      storiesListElement.addEventListener('click', this._handleStoryItemClick.bind(this));
-    }
-  }
-
-  async _handleStoryItemClick(event) {
+  async handleStoryItemClick(event) {
     const target = event.target;
 
     // Handle remove favorite button click

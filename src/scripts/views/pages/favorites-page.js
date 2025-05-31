@@ -7,18 +7,39 @@ class FavoritesPage {
 
   async render() {
     return `
-      <section id="favorites-container">
-        <h2>Your Favorite Stories</h2>
-        <div id="favoriteStoriesList" class="stories-grid"></div>
-      </section>
+      <div class="container">
+        <section id="favorites-container">
+          <h2>Your Favorite Stories</h2>
+          <!-- Back to Home Button -->
+          <div class="back-to-home-container">
+            <button id="backToHomeButton" class="back-button">Back to Home</button>
+          </div>
+          <div id="favoriteStoriesList" class="stories-grid"></div>
+        </section>
+      </div>
     `;
   }
 
   async afterRender() {
     console.log('Favorites page after render.');
+    
+    // Add event listener for the Back to Home button
+    const backToHomeButton = document.getElementById('backToHomeButton');
+    if (backToHomeButton) {
+      backToHomeButton.addEventListener('click', () => {
+        window.location.hash = '#/'; // Navigate to the Home page
+      });
+    }
+
     // Call the presenter's initialize method after the view is rendered
     if (this._presenter && typeof this._presenter.initialize === 'function') {
       await this._presenter.initialize();
+    }
+
+    // Setup event listener for story items using event delegation
+    const storiesListElement = document.getElementById('favoriteStoriesList');
+    if (storiesListElement && this._presenter && typeof this._presenter.handleStoryItemClick === 'function') {
+      storiesListElement.addEventListener('click', this._presenter.handleStoryItemClick.bind(this._presenter));
     }
   }
 
@@ -57,8 +78,10 @@ class FavoritesPage {
               </p>
             ` : ''}
           </div>
-          <a href="#/stories/${story.id}" class="read-more-button">Read More</a>
-          <button class="remove-favorite-button" data-id="${story.id}">Remove from Favorites</button>
+          <div class="story-actions">
+            <a href="#/stories/${story.id}" class="read-more-button">Read More</a>
+            <button class="remove-favorite-button" data-id="${story.id}">Remove from Favorites</button>
+          </div>
         </div>
       `;
       storiesListElement.appendChild(storyElement);
