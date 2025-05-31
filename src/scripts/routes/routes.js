@@ -10,6 +10,7 @@ import AddStoryPresenter from '../presenters/add-story-presenter';
 import RegisterPresenter from '../presenters/register-presenter';
 import FavoritesPage from '../views/pages/favorites-page';
 import FavoritesPresenter from '../presenters/favorites-presenter';
+import NotFoundPage from '../views/pages/not-found-page';
 
 
 const loginPage = new LoginPage();
@@ -44,6 +45,7 @@ const routes = {
   '/stories/:id': detailStoryPage,
   '/register': registerPage,
   '/favorites': favoritesPage,
+  '/404': new NotFoundPage(),
 
 };
 

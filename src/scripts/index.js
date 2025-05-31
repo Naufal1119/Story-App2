@@ -88,8 +88,11 @@ class App {
 
   async renderPage() {
     const url = parseActiveUrlWithCombiner();
-    const page = routes[url] || routes['/404'];
+    const page = routes[url]; // Get the page based on the URL
     
+    // If the route is not found, use the 404 page
+    const targetPage = page || routes['/404'];
+
     // Update navigation visibility before rendering the page
     this._updateNavigationVisibility(url);
     
@@ -109,9 +112,9 @@ class App {
     if (document.startViewTransition) {
       document.startViewTransition(async () => {
         try {
-          this._content.innerHTML = await page.render();
-          if (typeof page.afterRender === 'function') {
-              await page.afterRender();
+          this._content.innerHTML = await targetPage.render();
+          if (typeof targetPage.afterRender === 'function') {
+              await targetPage.afterRender();
           }
         } catch (error) {
           console.error('Error rendering page with transition:', error);
@@ -121,9 +124,9 @@ class App {
     } else {
       // Fallback for browsers that don't support View Transition API
       try {
-        this._content.innerHTML = await page.render();
-        if (typeof page.afterRender === 'function') {
-            await page.afterRender();
+        this._content.innerHTML = await targetPage.render();
+        if (typeof targetPage.afterRender === 'function') {
+            await targetPage.afterRender();
         }
       } catch (error) {
         console.error('Error rendering page without transition:', error);
@@ -156,9 +159,6 @@ class App {
     if (this._favoritesNavItem) {
         this._favoritesNavItem.style.display = (isLoggedIn && !isAuthPage) ? 'list-item' : 'none';
     }
-
-     // The Home link should always be visible, regardless of login status
-     // We don't need to explicitly control its visibility here unless there's a specific requirement
   }
 
   async _checkSubscriptionStatusAndUpdateButton() {
