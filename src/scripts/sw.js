@@ -84,6 +84,15 @@ setCatchHandler(async ({ event }) => {
   // The catch handler is triggered when a route handler throws an error
   // or returns a Response.error().
   
+  // Check if the failed request is for the story API endpoint.
+  if (event.request.url === 'https://story-api.dicoding.dev/v1/stories') {
+    console.warn(`[Service Worker] Failed to fetch story API (${event.request.url}). Serving empty response as fallback.`);
+    // Return a synthetic response with an empty array
+    return new Response(JSON.stringify([]), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   // Check if the request is a navigation.
   if (event.request.mode === 'navigate') {
     console.warn(`[Service Worker] Navigasi gagal untuk ${event.request.url}. Mencoba sajikan halaman offline.`);
@@ -92,8 +101,11 @@ setCatchHandler(async ({ event }) => {
   }
 
   // Fallback for other types of requests (optional, might just let them fail)
-  console.warn(`[Service Worker] Catch handler triggered for non-navigation request: ${event.request.url}.`);
-  return Response.error(); // Default to network error for non-navigations
+  console.warn(`[Service Worker] Catch handler triggered for other request: ${event.request.url}.`);
+  // For other failed requests, we might still want to return an error or a generic offline asset
+  // Depending on the asset type, you might serve a placeholder image, etc.
+  // For now, we'll just return an error.
+  return Response.error();
 });
 
 // --- Existing Push Notification Handlers ---

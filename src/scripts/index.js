@@ -24,6 +24,7 @@ class App {
     this._subscribeNavItem = this._navigationDrawer.querySelector('.subscribe-button').parentElement;
     this._logoutNavItem = this._navigationDrawer.querySelector('.logout-button').parentElement;
     this._subscribeButton = this._navigationDrawer.querySelector('.subscribe-button');
+    this._favoritesNavItem = this._navigationDrawer.querySelector('.favorites-button').parentElement;
 
     this._initialAppShell();
     this._checkSubscriptionStatusAndUpdateButton();
@@ -137,6 +138,11 @@ class App {
     }
     if (this._logoutNavItem) {
       this._logoutNavItem.style.display = isLoggedIn ? 'list-item' : 'none';
+    }
+    
+    // Control visibility of the Favorites button
+    if (this._favoritesNavItem) {
+        this._favoritesNavItem.style.display = (isLoggedIn && !isAuthPage) ? 'list-item' : 'none';
     }
 
      // The Home link should always be visible, regardless of login status

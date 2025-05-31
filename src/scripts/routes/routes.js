@@ -8,6 +8,9 @@ import HomePresenter from '../presenters/home-presenter';
 import DetailStoryPresenter from '../presenters/detail-story-presenter';
 import AddStoryPresenter from '../presenters/add-story-presenter';
 import RegisterPresenter from '../presenters/register-presenter';
+import FavoritesPage from '../views/pages/favorites-page';
+import FavoritesPresenter from '../presenters/favorites-presenter';
+
 
 const loginPage = new LoginPage();
 const loginPresenter = new LoginPresenter(loginPage);
@@ -29,16 +32,19 @@ const registerPage = new RegisterPage();
 const registerPresenter = new RegisterPresenter(registerPage);
 registerPage.setPresenter(registerPresenter);
 
+// Initialize Favorites Page and Presenter
+const favoritesPage = new FavoritesPage();
+const favoritesPresenter = new FavoritesPresenter({ view: favoritesPage });
+favoritesPage.setPresenter(favoritesPresenter);
+
 const routes = {
   '/': homePage,
   '/login': loginPage,
   '/stories/add': addStoryPage,
   '/stories/:id': detailStoryPage,
   '/register': registerPage,
-  '/404': {
-    render: () => '<h2>Page Not Found</h2>',
-    afterRender: () => {},
-  },
+  '/favorites': favoritesPage,
+
 };
 
 export default routes;

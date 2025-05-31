@@ -32,7 +32,7 @@ export default class HomePage {
         <img src="${story.photoUrl}" class="story-image" alt="Story photo by ${story.name}">
         <div class="story-content">
           <h2 class="story-title">${story.name}</h2>
-          <p class="story-description">${story.description}</p>
+          <p class="story-description">${story.description ? story.description.substring(0, 100) + '...' : 'No description'}</p>
           <div class="story-meta">
             <p class="story-date">
               <i class="fa fa-calendar" aria-hidden="true"></i> ${new Date(story.createdAt).toLocaleDateString()}
@@ -44,6 +44,7 @@ export default class HomePage {
             ` : ''}
           </div>
           <a href="#/stories/${story.id}" class="read-more-button">Read More</a>
+          <button class="save-favorite-button ${story.isFavorite ? 'saved' : 'not-saved'}" data-id="${story.id}" data-title="${story.title || story.name}" data-photo="${story.photoUrl}" data-description="${story.description || ''}">${story.isFavorite ? 'Saved' : 'Save'}</button>
         </div>
       </article>
     `).join('');
@@ -75,6 +76,49 @@ export default class HomePage {
           }
         });
       }
+
+      // Add event listeners for the Save/Unsave buttons
+      const storiesContainer = document.getElementById('storiesContainer');
+      if (storiesContainer) {
+        storiesContainer.addEventListener('click', async (event) => {
+          const target = event.target;
+          if (target.classList.contains('save-favorite-button')) {
+            const storyId = target.dataset.id;
+            const storyTitle = target.dataset.title;
+            const storyPhotoUrl = target.dataset.photo;
+            const storyDescription = target.dataset.description;
+
+            const story = {
+              id: storyId,
+              title: storyTitle,
+              photoUrl: storyPhotoUrl,
+              description: storyDescription,
+              // Add other properties if needed (e.g., createdAt, lat, lon)
+            };
+
+            try {
+              if (target.classList.contains('not-saved')) {
+                await this._presenter.addStoryToFavorites(story);
+                target.textContent = 'Saved';
+                target.classList.remove('not-saved');
+                target.classList.add('saved');
+                console.log(`Story ${storyId} added to favorites.`);
+              } else {
+                await this._presenter.removeStoryFromFavorites(storyId);
+                target.textContent = 'Save';
+                target.classList.remove('saved');
+                target.classList.add('not-saved');
+                console.log(`Story ${storyId} removed from favorites.`);
+              }
+            } catch (error) {
+              console.error('Failed to update favorite status:', error);
+              alert('Failed to update favorite status.');
+              // Optionally revert button state on error
+            }
+          }
+        });
+      }
+
     } catch (error) {
       console.error('Error loading stories:', error);
       alert('Failed to load stories');
